@@ -1,2 +1,11 @@
 {
+    "name": "ticket-session",
+    "version": "1.0.0",
+    "description": "a small ticket session engine",
+    "main": "build/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "SS & V",
+    "license": "ISC"
 }
