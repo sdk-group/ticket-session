@@ -3,11 +3,10 @@
 let OrchestrationNode = require('./orchestration-node.js');
 
 class Pointer extends OrchestrationNode {
-	constructor(args) {
-		// code
-	}
-
 	// methods
+	build(data) {
+
+	}
 }
 
 

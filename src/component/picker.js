@@ -3,11 +3,12 @@
 let OrchestrationNode = require('./orchestration-node.js');
 
 class Picker extends OrchestrationNode {
-	constructor(args) {
-		// code
+	// methods
+	build(data) {
+
 	}
 
-	// methods
+	addNode(node, addr) {}
 }
 
 

@@ -3,13 +3,13 @@
 describe("PERF", function () {
 	this.timeout(100000);
 	this.slow(0);
-	let iterations = 2000000;
+	let iterations = 1000000;
 	console.log("ITERATIONS x %d", iterations)
 	describe('concat', function () {
 		let x1, x2;
 		beforeEach(function () {
-			x1 = Array(6);
-			x2 = Array(10);
+			x1 = Array(150);
+			x2 = Array(100);
 			_.fill(x1, 'x1');
 			_.fill(x2, 'x2');
 		});
@@ -60,18 +60,18 @@ describe("PERF", function () {
 			return x;
 		}
 		beforeEach(function () {
-			x1 = Array(6);
-			x2 = Array(10);
+			x1 = Array(150);
+			x2 = Array(100);
 			_.fill(x1, 'x1');
 			_.fill(x2, 'x2');
 		});
 
-		it('native', function () {
-			let res;
-			for (var i = 0; i < iterations; i++) {
-				res = x1.map(fn)
-			}
-		});
+		// it('native', function () {
+		// 	let res;
+		// 	for (var i = 0; i < iterations; i++) {
+		// 		res = x1.map(fn)
+		// 	}
+		// });
 
 		it('lodash', function () {
 			let res;
@@ -114,8 +114,7 @@ describe("PERF", function () {
 		});
 
 	});
-
-	describe('obj iteration', function () {
+	describe('obj keys', function () {
 		let x1;
 		let fn = function (x) {
 			return x;
@@ -128,8 +127,31 @@ describe("PERF", function () {
 				d: 6
 			};
 		});
+		it('lodash', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = _.keys(x1);
+			}
+		});
+		it('native', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = Object.keys(x1);
+			}
+		});
+	});
+	describe('obj iteration', function () {
+		let x1;
+		beforeEach(function () {
+			x1 = {
+				a: 123,
+				b: 4,
+				c: 5,
+				d: 6
+			};
+		});
 
-		it('in keys', function () {
+		it('of keys', function () {
 			let res, keys = Object.keys(x1),
 				l = keys.length;
 			for (var i = 0; i < iterations; i++) {
@@ -152,7 +174,7 @@ describe("PERF", function () {
 
 		});
 
-		it('for of', function () {
+		it('for in', function () {
 			let res;
 			for (var i = 0; i < iterations; i++) {
 				res = {};
@@ -195,8 +217,8 @@ describe("PERF", function () {
 	describe('forEach', function () {
 		let x1, x2;
 		beforeEach(function () {
-			x1 = Array(6);
-			x2 = Array(10);
+			x1 = Array(150);
+			x2 = Array(100);
 			_.fill(x1, 'x1');
 			_.fill(x2, 'x2');
 		});
@@ -252,8 +274,8 @@ describe("PERF", function () {
 	describe('isArray', function () {
 		let x1, x2;
 		beforeEach(function () {
-			x1 = Array(6);
-			x2 = Array(10);
+			x1 = Array(150);
+			x2 = Array(100);
 			_.fill(x1, 'x1');
 			_.fill(x2, 'x2');
 		});
