@@ -115,6 +115,83 @@ describe("PERF", function () {
 
 	});
 
+	describe('obj iteration', function () {
+		let x1;
+		let fn = function (x) {
+			return x;
+		}
+		beforeEach(function () {
+			x1 = {
+				a: 123,
+				b: 4,
+				c: 5,
+				d: 6
+			};
+		});
+
+		it('in keys', function () {
+			let res, keys = Object.keys(x1),
+				l = keys.length;
+			for (var i = 0; i < iterations; i++) {
+				res = {}
+				for (var j of keys) {
+					res[j] = x1[j];
+				}
+			}
+
+		});
+
+		it('lodash', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = {};
+				_.reduce(x1, (acc, val, k) => {
+					res[k] = val;
+				}, res)
+			}
+
+		});
+
+		it('for of', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = {};
+				for (var j in x1) {
+					res[j] = x1[j];
+				}
+			}
+
+		});
+
+		it(' for', function () {
+			let res, keys = Object.keys(x1),
+				l = keys.length;
+			for (var i = 0; i < iterations; i++) {
+				res = {}
+				for (var j = 0; j < l; j++) {
+					res[keys[j]] = x1[keys[j]];
+				}
+			}
+
+		});
+
+
+		it(' while ', function () {
+			let res, keys = Object.keys(x1),
+				l = keys.length,
+				k = l;
+			for (var i = 0; i < iterations; i++) {
+				res = {}
+				while (l--) {
+					res[keys[k - l - 1]] = x1[keys[k - l - 1]];
+				}
+				l = k;
+			}
+
+		});
+
+	});
+
 	describe('forEach', function () {
 		let x1, x2;
 		beforeEach(function () {
@@ -490,7 +567,7 @@ describe("PERF", function () {
 				for (var i = 0; i < iterations; i++) {
 					res = _.get(inst[0], addrs[1])
 				}
-				console.log(res);
+
 			});
 
 			it('arr-lodash', function () {
@@ -499,7 +576,7 @@ describe("PERF", function () {
 					res = _.get(inst[0], addrs[0])
 
 				}
-				console.log(res);
+
 			});
 
 			it('obj-lodash', function () {
@@ -508,7 +585,7 @@ describe("PERF", function () {
 					res = _.get(inst[0], addrs[2])
 
 				}
-				console.log(res);
+
 			});
 
 			it('set', function () {
@@ -516,7 +593,7 @@ describe("PERF", function () {
 				for (var i = 0; i < iterations; i++) {
 					res = inst[0][addrs[1]];
 				}
-				console.log(res);
+
 			});
 
 			it('arr', function () {
@@ -524,7 +601,7 @@ describe("PERF", function () {
 				for (var i = 0; i < iterations; i++) {
 					res = inst[0][addrs[0]];
 				}
-				console.log(res);
+
 			});
 
 			it('obj', function () {
@@ -532,7 +609,7 @@ describe("PERF", function () {
 				for (var i = 0; i < iterations; i++) {
 					res = inst[0][addrs[2]];
 				}
-				console.log(res);
+
 			});
 		});
 	});

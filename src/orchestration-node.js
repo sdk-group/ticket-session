@@ -2,16 +2,15 @@
 
 
 class OrchestrationNode {
-	constructor(parent = null) {
-		this.parent = parent;
-		this.content = [];
+	constructor(description = {}) {
+		//for (){}
+		this.content = Object.create(null);
 	}
 
 	// methods
-
-	addNode(node) {
+	addNode(node, addr) {
 		if (node.constructor === OrchestrationNode) {
-			this.content.push(node);
+			this.content[addr] = node;
 		}
 	}
 
