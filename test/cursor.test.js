@@ -1,3 +1,5 @@
+'use strict';
+
 let Cursor = require("../build/cursor.js");
 let Graph = require("../build/orchestration-node.js");
 

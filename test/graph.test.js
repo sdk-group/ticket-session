@@ -1,3 +1,5 @@
+'use strict';
+
 let Graph = require("../build/orchestration-node.js");
 
 describe('description', function () {
