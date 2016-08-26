@@ -5,7 +5,11 @@ let OrchestrationNode = require('./orchestration-node.js');
 class Idle extends OrchestrationNode {
 	// methods
 	build(entity) {
-		this.content = entity;
+		this._content = entity;
+	}
+
+	getEntity() {
+		return this._content;
 	}
 
 	isLeaf() {

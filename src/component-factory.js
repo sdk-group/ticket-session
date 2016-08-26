@@ -7,7 +7,7 @@ function discover(name) {
 }
 
 class ComponentFactory {
-	static build(type, data) {
+	static build(type, data = []) {
 
 		let Model = discover(type);
 

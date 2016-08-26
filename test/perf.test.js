@@ -20,6 +20,12 @@ describe("PERF", function () {
 				res = _.concat(x1, x2)
 			}
 		});
+		it('lodash flatten', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = _.flatten([x1, x2])
+			}
+		});
 
 		it('native12', function () {
 			let res;
@@ -216,6 +222,11 @@ describe("PERF", function () {
 
 	describe('forEach', function () {
 		let x1, x2;
+
+		function fn(x) {
+			return x;
+		}
+
 		beforeEach(function () {
 			x1 = Array(150);
 			x2 = Array(100);
@@ -226,7 +237,14 @@ describe("PERF", function () {
 		it('lodash', function () {
 			let res;
 			for (var i = 0; i < iterations; i++) {
-				_.forEach(x1, _.identity)
+				_.forEach(x1, fn)
+			}
+		});
+
+		it('native', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				x1.forEach(fn)
 			}
 		});
 
@@ -236,36 +254,36 @@ describe("PERF", function () {
 			for (var i = 0; i < iterations; i++) {
 				res = [];
 				for (j of x1) {
-					_.identity(j);
+					fn(j);
 				}
 			}
 		});
 
-		it('push + for in', function () {
+		it(' for in', function () {
 			let res, j;
 			for (var i = 0; i < iterations; i++) {
 				res = [];
 				for (j in x1) {
-					_.identity(x1[j]);
+					fn(x1[j]);
 				}
 			}
 		});
 
-		it('push + while ', function () {
+		it('while ', function () {
 			let res, k = x1.length,
 				l = x1.length;
 			for (var i = 0; i < iterations; i++) {
 				while (l--) {
-					_.identity(x1[k - l - 1]);
+					fn(x1[k - l - 1]);
 				}
 				l = k;
 			}
 		});
-		it('push + for ', function () {
+		it(' for ', function () {
 			let res, j, l = x1.length;
 			for (var i = 0; i < iterations; i++) {
 				for (j = 0; j < l; j++) {
-					_.identity(x1[j]);
+					fn(x1[j]);
 				}
 			}
 		});
