@@ -7,10 +7,30 @@ class OrchestrationNode {
 	constructor() {
 		this._proto_signum = _proto_signum;
 		this._content = [];
+		this._observers = [];
 	}
 
-	setParent(parent = null) {
+
+	attachObserver(observer) {
+		this._observers.push(observer);
+	}
+
+	setParent(parent = null, attach = false) {
 		this._parent = parent;
+		if (parent && attach) {
+			this.attachObserver(parent);
+		}
+	}
+	getParent() {
+		return this._parent;
+	}
+
+	notify(data) {
+		console.log(this.constructor.name + " ON NOTIFIED");
+		let l = this._observers.length;
+		while (l--) {
+			this._observers[l].notify(data);
+		}
 	}
 
 	addNode(node, addr = null) {
@@ -20,9 +40,10 @@ class OrchestrationNode {
 			} else {
 				this._content[addr] = (node);
 			}
-			node.setParent(this);
+			node.setParent(this, true);
 		}
 	}
+
 	addNodes(nodes) {
 		if (this.constructor.isComponent(nodes)) {
 			this.addNode(nodes);
@@ -43,6 +64,9 @@ class OrchestrationNode {
 		return this._content;
 	}
 
+	getLength() {
+		return this._content.length;
+	}
 	build() {
 		throw new Error(`${ this.constructor.name}::${"build"} is not implemented.`);
 	}
@@ -56,7 +80,6 @@ class OrchestrationNode {
 		return false;
 	}
 
-	//methods
 	next(cursor) {
 		throw new Error(`${ this.constructor.name}::${"next"} is not implemented.`);
 	}
@@ -65,6 +88,7 @@ class OrchestrationNode {
 	render(cursor) {
 		throw new Error(`${ this.constructor.name}::${"render"} is not implemented.`);
 	}
+
 }
 
 module.exports = OrchestrationNode;

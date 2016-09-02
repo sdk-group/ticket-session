@@ -7,19 +7,19 @@ function discover(name) {
 }
 
 class ComponentFactory {
-	static build(type, data = []) {
+	//description: {type:,data:}
+	static build(description) {
 
-		let Model = discover(type);
+		let Model = discover(description.type);
 
 		let response = new Model();
 		if (response.isLeaf()) {
-			response.build(data);
+			response.build(description.data);
 		} else {
-			response.build(_.map(data, d => {
+			response.build(_.map(description.data, d => {
 				let item = d;
 				if (!Idle.isComponent(d)) {
-					item = new Idle();
-					item.build(d);
+					item = ComponentFactory.build(d);
 				}
 				return item;
 			}));

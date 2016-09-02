@@ -5,6 +5,61 @@ describe("PERF", function () {
 	this.slow(0);
 	let iterations = 1000000;
 	console.log("ITERATIONS x %d", iterations)
+	describe('sort', function () {
+		let x1, x2;
+		beforeEach(function () {
+			x1 = Array(15);
+			x2 = Array(10);
+			x1 = _.map(x1, el => Math.random())
+			x2 = _.map(x2, el => Math.random())
+		});
+
+		it('lodash sortBy', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = _.sortBy(x1)
+			}
+		});
+
+		it('lodash orderBy', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = _.orderBy(x1, _.identity, 'asc')
+			}
+		});
+
+		it('native', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = x1.slice();
+				res = res.sort()
+			}
+		});
+	})
+	describe('indexOf', function () {
+		let x1, x2;
+		beforeEach(function () {
+			x1 = Array(150);
+			x2 = Array(100);
+			x1 = _.map(x1, el => Math.random())
+			x2 = _.map(x2, el => Math.random())
+		});
+
+		it('lodash', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = !!~_.indexOf(x1, x1[25])
+			}
+		});
+
+		it('native', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = !!~x1.indexOf(x1[25])
+			}
+		});
+	})
+
 	describe('concat', function () {
 		let x1, x2;
 		beforeEach(function () {
@@ -27,6 +82,12 @@ describe("PERF", function () {
 			}
 		});
 
+		// it('splice', function () {
+		// 	let res;
+		// 	for (var i = 0; i < iterations; i++) {
+		// 		x1.splice(x1.length, 0, ...x2);
+		// 	}
+		// });
 		it('native12', function () {
 			let res;
 			for (var i = 0; i < iterations; i++) {
@@ -55,11 +116,76 @@ describe("PERF", function () {
 			let res;
 			for (var i = 0; i < iterations; i++) {
 				res = x1.slice();
-				res.push.apply(res, x2);
+				Array.prototype.push.apply(res, x2);
+			}
+		});
+		it('push+spread', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = x1.slice();
+				res.push(...x2);
 			}
 		});
 	});
-
+	describe('array/string as path', function () {
+		it('array slice->push.apply', function () {
+			let res = [];
+			for (var i = 0; i < iterations; i++) {
+				var t = res.slice();
+				t.push(i);
+				// res = t;
+			}
+		});
+		// it('array slice->concat', function () {
+		// 	let res = [];
+		// 	for (var i = 0; i < iterations; i++) {
+		// 		res = [].concat(res, i);
+		// 	}
+		// });
+		it('string +=', function () {
+			let res = '';
+			for (var i = 0; i < iterations; i++) {
+				var t = res;
+				t += i;
+				res = t;
+			}
+		});
+		it('string templates', function () {
+			let res = '';
+			for (var i = 0; i < iterations; i++) {
+				var t = res;
+				t = `${t}${i}`;
+				res = t;
+			}
+		});
+	});
+	describe('val at end', function () {
+		it('split', function () {
+			let ch, res = '12.32.561.213';
+			for (var i = 0; i < iterations; i++) {
+				ch = res.split('.');
+				ch = ch[ch.length - 1];
+			}
+		});
+		it('regex', function () {
+			let ch, res = '12.32.561.213';
+			for (var i = 0; i < iterations; i++) {
+				ch = res.match(/.*\.(\d+)$/)[1];
+			}
+		});
+		it('string templates', function () {
+			let ch, res = '12.32.561.213';
+			for (var i = 0; i < iterations; i++) {
+				let l = res.length;
+				ch = '';
+				while (l--) {
+					ch = res[l] + ch;
+					if (res[l - 1] == '.')
+						l = 0;
+				}
+			}
+		});
+	});
 	describe('map', function () {
 		let x1, x2;
 		let fn = function (x) {
@@ -143,6 +269,44 @@ describe("PERF", function () {
 			let res;
 			for (var i = 0; i < iterations; i++) {
 				res = Object.keys(x1);
+			}
+		});
+	});
+	describe('obj has', function () {
+		let x1;
+		let fn = function (x) {
+			return x;
+		}
+		beforeEach(function () {
+			x1 = {
+				a: 123,
+				b: 4,
+				c: 5,
+				d: 6
+			};
+		});
+		it('lodash', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = _.has(x1, 'a');
+			}
+		});
+		it('native hasOwnProperty', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = x1.hasOwnProperty('a');
+			}
+		});
+		it('bool typecast', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = !!x1['a'];
+			}
+		});
+		it('bool typecast', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = !!x1.a;
 			}
 		});
 	});
