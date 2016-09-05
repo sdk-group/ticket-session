@@ -34,7 +34,7 @@ class Idle extends OrchestrationNode {
 
 	update(leaf_data) {
 		this._content.update(leaf_data);
-		this.notify();
+		this.notify(this._content);
 	}
 
 	isDone() {
@@ -42,8 +42,11 @@ class Idle extends OrchestrationNode {
 	}
 
 	next(cursor) {
-		return this.getParent()
-			.next(cursor)
+		let parent = this.getParent();
+		if (parent)
+			return parent.next(cursor);
+		else
+			return this.getContent();
 	}
 }
 

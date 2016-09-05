@@ -53,6 +53,7 @@ class Session {
 	}
 
 	find(id) {
+		console.log(this.graph);
 		return this.graph.getLeaf(id);
 	}
 

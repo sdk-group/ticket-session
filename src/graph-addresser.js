@@ -46,8 +46,8 @@ class GraphAddresser {
 		if (curr.type === 'idle') {
 			let ln = (curr.data.constructor === Array) ? curr.data[0] : curr.data;
 			curr.data = entities[keymap[ln]] || null;
-			this.identifier_table[ln] = waylong;
-			this.address_table[waylong] = curr.data;
+			this.identifier_table[ln] = waylong || '~';
+			this.address_table[waylong || '~'] = curr.data;
 		} else {
 			let l = curr.data.length,
 				newway;

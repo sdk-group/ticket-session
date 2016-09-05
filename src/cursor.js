@@ -24,6 +24,7 @@ class Cursor {
 			this.pos = pos;
 			this.curr = this.graph.getLeaf(pos);
 			this.addr = this.graph.getAddress(pos);
+			// console.log(this);
 			this.addr_arr = this.addr.split(this.graph.addressDelimiter());
 			this.resetDepth();
 		}
