@@ -25,6 +25,7 @@ gulp.task("es6-js", function () {
 	return gulp.src(src)
 		.pipe(babel({
 			"comments": false,
+			"presets": ["es2015-node5"],
 			"babelrc": false,
 			"plugins": plg
 		}))
