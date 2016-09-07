@@ -53,7 +53,6 @@ class Session {
 	}
 
 	find(id) {
-		console.log(this.graph);
 		return this.graph.getLeaf(id);
 	}
 
@@ -62,6 +61,16 @@ class Session {
 			return;
 
 		this.cursor.point(addr);
+	}
+
+	//@FIXIT this is faster than bind, but ugly as shit
+	_pointIfActiveCallback(cursor, cb) {
+		return function (entity) {
+			cursor.clear();
+			if (entity.isActive())
+				cursor.point(entity);
+			cb(entity);
+		}
 	}
 
 	current() {
@@ -81,7 +90,7 @@ class Session {
 
 
 	onUpdate(cb) {
-		this.graph.onUpdate(cb);
+		this.graph.onUpdate(this._pointIfActiveCallback(this.cursor, cb));
 	}
 
 

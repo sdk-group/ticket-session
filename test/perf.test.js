@@ -60,6 +60,230 @@ describe("PERF", function () {
 		});
 	})
 
+	describe.only('bind vs closure', function () {
+		let cb1 = function (data, self) {
+			if (self)
+				self._val = data;
+			else
+				this._val = data;
+		};
+		var cb2 = function (data, self) {
+			if (self)
+				self._val = data;
+			else
+				this._val = data;
+		};
+
+		function cb3(data, self) {
+			if (self)
+				self._val = data;
+			else
+				this._val = data;
+		}
+		const cb4 = (data, self) => {
+			if (self)
+				self._val = data;
+			else
+				this._val = data;
+		}
+		let cb5 = (data, self) => {
+			if (self)
+				self._val = data;
+			else
+				this._val = data;
+		};
+		var cb6 = (data, self) => {
+			if (self)
+				self._val = data;
+			else
+				this._val = data;
+		};
+		beforeEach(function () {});
+
+		it('lodash cb1', function () {
+			let res = _.bind(cb1, {});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('lodash cb2', function () {
+			let res = _.bind(cb2, {});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('lodash cb3', function () {
+			let res = _.bind(cb3, {});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('lodash cb4', function () {
+			let res = _.bind(cb4, {});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('lodash cb5', function () {
+			let res = _.bind(cb5, {});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('lodash cb6', function () {
+			let res = _.bind(cb6, {});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+
+		it('native cb1', function () {
+			let res = cb1.bind({});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('native cb2', function () {
+			let res = cb2.bind({});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('native cb3', function () {
+			let res = cb3.bind({});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('native cb4', function () {
+			let res = cb4.bind({});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('native cb5', function () {
+			let res = cb5.bind({});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('native cb6', function () {
+			let res = cb6.bind({});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+
+		it('arg cb1', function () {
+			var that = {};
+			let res = cb1;
+			for (var i = 0; i < iterations; i++) {
+				res(666, that);
+			}
+		});
+		it('arg cb2', function () {
+			var that = {};
+			let res = cb2;
+			for (var i = 0; i < iterations; i++) {
+				res(666, that);
+			}
+		});
+		it('arg cb3', function () {
+			var that = {};
+			let res = cb3;
+			for (var i = 0; i < iterations; i++) {
+				res(666, that);
+			}
+		});
+		it('arg cb4', function () {
+			var that = {};
+			let res = cb4;
+			for (var i = 0; i < iterations; i++) {
+				res(666, that);
+			}
+		});
+		it('arg cb5', function () {
+			var that = {};
+			let res = cb5;
+			for (var i = 0; i < iterations; i++) {
+				res(666, that);
+			}
+		});
+		it('arg cb6', function () {
+			var that = {};
+			let res = cb6;
+			for (var i = 0; i < iterations; i++) {
+				res(666, that);
+			}
+		});
+		it('closure cb1', function () {
+			let res = function (that) {
+				let cb1 = function (data, self) {
+					that._val = data;
+				};
+				return cb1;
+			}({});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('closure cb2', function () {
+			let res = function (that) {
+				var cb2 = function (data, self) {
+					that._val = data;
+				};
+				return cb2;
+			}({});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('closure cb3', function () {
+			let res = function (that) {
+				function cb3(data, self) {
+					that._val = data;
+				};
+				return cb3;
+			}({});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('closure cb4', function () {
+			let res = function (that) {
+				const cb4 = function (data, self) {
+					that._val = data;
+				};
+				return cb4;
+			}({});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('closure cb5', function () {
+			let res = function (that) {
+				let cb5 = (data, self) => {
+					that._val = data;
+				};
+				return cb5;
+			}({});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+		it('closure cb6', function () {
+			let res = function (that) {
+				var cb6 = (data, self) => {
+					that._val = data;
+				};
+				return cb6;
+			}({});
+			for (var i = 0; i < iterations; i++) {
+				res(666);
+			}
+		});
+	})
+
 	describe('concat', function () {
 		let x1, x2;
 		beforeEach(function () {
