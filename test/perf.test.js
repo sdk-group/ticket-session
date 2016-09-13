@@ -60,7 +60,7 @@ describe("PERF", function () {
 		});
 	})
 
-	describe.only('bind vs closure', function () {
+	describe('bind vs closure', function () {
 		let cb1 = function (data, self) {
 			if (self)
 				self._val = data;
@@ -534,7 +534,7 @@ describe("PERF", function () {
 			}
 		});
 	});
-	describe('obj iteration', function () {
+	describe.only('obj iteration', function () {
 		let x1;
 		beforeEach(function () {
 			x1 = {

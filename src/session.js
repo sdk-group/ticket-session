@@ -43,6 +43,10 @@ class Session {
 		return this._modelDoc.properties.code;
 	}
 
+	dedication() {
+		return this._modelDoc.properties.dedicated_date;
+	}
+
 	getSection() {
 		return this._modelDoc.properties.organization;
 	}
