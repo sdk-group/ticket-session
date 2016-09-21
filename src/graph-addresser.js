@@ -14,6 +14,7 @@ class GraphAddresser {
 
 	// methods
 	from(description, entities) {
+		console.log("DESCRIPTION", description);
 		this.desc = description;
 		this.build(entities);
 
@@ -49,6 +50,7 @@ class GraphAddresser {
 			this.identifier_table[ln] = waylong || '~';
 			this.address_table[waylong || '~'] = curr.data;
 		} else {
+			console.log("CURRDATA", curr.data);
 			let l = curr.data.length,
 				newway;
 			while (l--) {

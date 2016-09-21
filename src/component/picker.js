@@ -46,8 +46,11 @@ class Picker extends OrchestrationNode {
 				return nxt.next(cursor);
 			}
 		} else {
-			return this.getParent()
-				.next(cursor);
+			console.log("PICKER PARENT", this._parent);
+			let parent = this.getParent();
+			if (!parent)
+				return null;
+			return parent.next(cursor);
 		}
 	}
 

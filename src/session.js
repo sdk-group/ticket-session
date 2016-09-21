@@ -47,7 +47,7 @@ class Session {
 		return this._modelDoc.properties.dedicated_date;
 	}
 
-	getSection() {
+	attachment() {
 		return this._modelDoc.properties.organization;
 	}
 
