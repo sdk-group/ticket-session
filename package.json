@@ -20,6 +20,6 @@
 		"gulp-plumber": "^1.1.0",
 		"gulp-sourcemaps": "^1.6.0",
 		"gulp-watch": "^4.3.9",
-		"lodash": "^4.15.0"
+		"lodash": "^4.16.1"
 	}
 }
