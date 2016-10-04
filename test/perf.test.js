@@ -35,6 +35,62 @@ describe("PERF", function () {
 				res = res.sort()
 			}
 		});
+	});
+	describe('filter', function () {
+		let x1, x2;
+		beforeEach(function () {
+			x1 = Array(15);
+			x2 = Array(10);
+			x1 = _.map(x1, el => Math.random())
+			x2 = _.map(x2, el => Math.random())
+		});
+
+		it('lodash filter arrow', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = _.filter(x1, t => t > 0.5)
+			}
+		});
+
+		it('lodash filter fn', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = _.filter(x1, function (t) {
+					return t > 0.5;
+				})
+			}
+		});
+
+
+		it('native arrow', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = x1.filter(t => t > 0.5);
+			}
+		});
+
+		it('native fn', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = x1.filter(function (t) {
+					return t > 0.5;
+				});
+			}
+		});
+
+		it('native while', function () {
+			let res, l = x1.length,
+				len = l;
+			for (var i = 0; i < iterations; i++) {
+				res = [];
+				while (l--) {
+					if (x1[len - l - 1] > 0.5)
+						res.push(x1[len - l - 1]);
+				}
+				l = len;
+			}
+			console.log(res);
+		});
 	})
 	describe('indexOf', function () {
 		let x1, x2;

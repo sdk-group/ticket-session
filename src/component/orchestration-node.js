@@ -15,6 +15,16 @@ class OrchestrationNode {
 		this._observers.push(observer);
 	}
 
+	detachObserver(observer) {
+		let new_arr = [],
+			l = this._observers.length;
+		while (l--) {
+			if (this._observers[l] !== observer)
+				new_arr.push(this._observers[l]);
+		}
+		this._observers = new_arr;
+	}
+
 	setParent(parent = null, attach = false) {
 		this._parent = parent;
 		if (parent && attach) {

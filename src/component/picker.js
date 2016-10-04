@@ -48,8 +48,10 @@ class Picker extends OrchestrationNode {
 		} else {
 			console.log("PICKER PARENT", this._parent);
 			let parent = this.getParent();
-			if (!parent)
+			if (!parent) {
+				cursor.clear();
 				return null;
+			}
 			return parent.next(cursor);
 		}
 	}
@@ -60,6 +62,15 @@ class Picker extends OrchestrationNode {
 		while (l--) {
 			res = res && this.getNode(l)
 				.isDone();
+		}
+		return res;
+	}
+	contains(item) {
+		let l = this.getLength(),
+			res = true;
+		while (l--) {
+			res = res && this.getNode(l)
+				.contains(item);
 		}
 		return res;
 	}
