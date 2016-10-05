@@ -59,6 +59,9 @@ class Session {
 	}
 
 	splittedRoute(splitter) {
+		let description = this._modelDoc.get("description");
+		if (description.type == 'idle')
+			return;
 		let branches = this.graph.splitDescriptionBy(splitter);
 		let entities = this.graph.entities();
 		let desc = {
