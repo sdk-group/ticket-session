@@ -14,10 +14,10 @@ class GraphAddresser {
 
 	// methods
 	from(description, entities) {
-		console.log("DESCRIPTION", require('util')
-			.inspect(description, {
-				depth: null
-			}));
+		// console.log("DESCRIPTION", require('util')
+		// 	.inspect(description, {
+		// 		depth: null
+		// 	}));
 		this.desc = description;
 		this.build(entities);
 
@@ -90,8 +90,8 @@ class GraphAddresser {
 		return this.graph.render(cursor);
 	}
 
-	next(cursor) {
-		return this.graph.next(cursor);
+	next(cursor, criteria) {
+		return this.graph.next(cursor, criteria);
 	}
 
 	entities() {

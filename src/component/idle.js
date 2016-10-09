@@ -43,10 +43,10 @@ class Idle extends OrchestrationNode {
 	contains(item) {
 		return this._content === item;
 	}
-	next(cursor) {
+	next(cursor, criteria) {
 		let parent = this.getParent();
 		if (parent)
-			return parent.next(cursor);
+			return parent.next(cursor, criteria);
 		else
 			return this.getContent();
 	}

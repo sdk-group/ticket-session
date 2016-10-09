@@ -33,7 +33,6 @@ class Session {
 	}
 
 	virtualRoute(virtual_entity) {
-		console.log("VITRUAL ENTITY", virtual_entity);
 		let desc = this._modelDoc.get("description");
 		let entities = this.graph.entities();
 		entities.push(virtual_entity);
@@ -123,13 +122,13 @@ class Session {
 		return this.cursor.current();
 	}
 
-	next() {
+	next(criteria) {
 		let cnt = this.cursor.current();
 		if (!cnt) {
-			this.graph.next(this.cursor);
+			this.graph.next(this.cursor, criteria);
 		} else {
 			cnt = cnt.getContainer();
-			cnt.next(this.cursor);
+			cnt.next(this.cursor, criteria);
 		}
 		return this.cursor.current();
 	}

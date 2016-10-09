@@ -28,13 +28,13 @@ class Picker extends OrchestrationNode {
 			.render(cursor.incDepth());
 	}
 
-	next(cursor) {
+	next(cursor, criteria) {
 		let l = this.getLength(),
 			len = l,
 			node, nxt;
 		while (l--) {
 			node = this.getNode(len - l - 1);
-			if (!node.isDone() && cursor.current() !== node.getContent()) {
+			if (!node.isDone() && cursor.current() !== node.getContent() && criteria(node.getContent())) {
 				nxt = node;
 				break;
 			}
@@ -52,7 +52,7 @@ class Picker extends OrchestrationNode {
 				cursor.clear();
 				return null;
 			}
-			return parent.next(cursor);
+			return parent.next(cursor, criteria);
 		}
 	}
 

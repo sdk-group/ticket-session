@@ -27,7 +27,7 @@ class Router extends OrchestrationNode {
 			.render(cursor.incDepth());
 	}
 
-	next(cursor) {
+	next(cursor, criteria) {
 		let l = this.getLength(),
 			len = l,
 			node, nxt, met = false;
@@ -54,7 +54,7 @@ class Router extends OrchestrationNode {
 				cursor.clear();
 				return null;
 			}
-			return parent.next(cursor);
+			return parent.next(cursor, criteria);
 		}
 	}
 
