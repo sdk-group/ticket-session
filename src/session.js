@@ -50,6 +50,11 @@ class Session {
 				data: virtual_entity.id
 			});
 		}
+		console.log("DESCRIPTION", require('util')
+			.inspect(desc, {
+
+				depth: null
+			}));
 		this._modelDoc.set("description", desc);
 		let uses = this._modelDoc.get("uses");
 		uses.push(virtual_entity.id);
@@ -122,7 +127,12 @@ class Session {
 		return this.cursor.current();
 	}
 
+	_truth() {
+		return true;
+	}
+
 	next(criteria) {
+		criteria = criteria || this._truth;
 		let cnt = this.cursor.current();
 		if (!cnt) {
 			this.graph.next(this.cursor, criteria);

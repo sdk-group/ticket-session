@@ -43,7 +43,7 @@ class Picker extends OrchestrationNode {
 			if (nxt.isLeaf()) {
 				cursor.point(nxt.getContent());
 			} else {
-				return nxt.next(cursor);
+				return nxt.next(cursor, criteria);
 			}
 		} else {
 			console.log("PICKER PARENT", this._parent);
