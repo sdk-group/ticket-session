@@ -47,8 +47,14 @@ class Idle extends OrchestrationNode {
 		let parent = this.getParent();
 		if (parent)
 			return parent.next(cursor, criteria);
-		else
-			return this.getContent();
+		else {
+			let cnt = this.getContent();
+			if (this.isDone() || cursor.current() === cnt) {
+				cursor.clear();
+			} else {
+				cursor.point(cnt);
+			}
+		}
 	}
 }
 

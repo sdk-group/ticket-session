@@ -40,6 +40,7 @@ class Picker extends OrchestrationNode {
 			}
 		}
 		if (nxt) {
+			//@TODO move some of this logic to idle
 			if (nxt.isLeaf()) {
 				cursor.point(nxt.getContent());
 			} else {

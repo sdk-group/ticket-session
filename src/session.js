@@ -66,12 +66,37 @@ class Session {
 		let description = this._modelDoc.get("description");
 		if (description.type == 'idle')
 			return;
-		let branches = this.graph.splitDescriptionBy(splitter);
 		let entities = this.graph.entities();
-		let desc = {
-			type: 'router',
-			data: branches
-		};
+		let is_directed = this._modelDoc.get("directed");
+		let desc;
+
+		if (!is_directed) {
+			let branches = this.graph.splitDescriptionBy(splitter);
+			desc = {
+				type: 'router',
+				data: branches
+			};
+			this._modelDoc.set("directed", true);
+		} else {
+			function customizer(objValue, srcValue) {
+				if (_.isArray(objValue)) {
+					return objValue.concat(srcValue);
+				}
+			}
+			let buff = {};
+			_.mergeWith(buff,
+				this.graph.description()
+				.data[0],
+				this.graph.description()
+				.data[1], customizer);
+			console.log("MERGED", buff);
+			let branches = this.graph.splitBranchBy(buff, splitter);
+			desc = {
+				type: 'router',
+				data: branches
+			};
+		}
+		console.log("NEWDESC", desc);
 		this._modelDoc.set("description", desc);
 		this.from(this.extract(), entities);
 	}
@@ -143,13 +168,24 @@ class Session {
 		return this.cursor.current();
 	}
 
+	isInactive() {
+		return this.graph.isInactive();
+	}
 
 	onUpdate(cb) {
 		this.graph.onUpdate(this._pointIfActiveCallback(this.cursor, cb));
 	}
 
-	tickets() {
-		return this.graph.entities();
+	tickets(fn) {
+		return this.graph.entities(fn);
+	}
+
+	_activityTest(entity) {
+		return entity && !entity.isInactive();
+	}
+
+	activeTickets() {
+		return this.graph.entities(this._activityTest);
 	}
 }
 

@@ -157,6 +157,49 @@ describe('session', function () {
 		});
 
 
+		it('ouch', function () {
+			console.log("____________________________________________________________");
+			let d = {
+				"type": "router",
+				"data": [
+					{
+						"type": "router",
+						"data": [
+							{
+								"type": "picker",
+								"data": [
+									{
+										"type": "idle",
+										"data": "ticket-test--1"
+									}]
+							}, {
+								"type": "picker",
+								"data": [
+									{
+										"type": "idle",
+										"data": "ticket-test--2"
+									}]
+							}]
+					}, {
+						"type": "router",
+						"data": [
+							{
+								"type": "picker",
+								"data": []
+							}, {
+								"type": "picker",
+								"data": []
+							}]
+					}]
+			}
+
+			let t = new TicketSession();
+			t.fillThis(_.cloneDeep(d));
+			session = Session(t, tickets);
+			expect(session.constructor.name)
+				.to.equal('Session');
+		});
+
 		it('should set session cursor by str', function () {
 			session.point('ticket-test--2');
 			expect(session.cursor.current())

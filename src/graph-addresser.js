@@ -54,6 +54,7 @@ class GraphAddresser {
 	}
 
 	_resolve(curr, entities, keymap, waylong) {
+		// console.log(curr);
 		if (curr.type === 'idle') {
 			let ln = (curr.data.constructor === Array) ? curr.data[0] : curr.data;
 			curr.data = entities[keymap[ln]] || null;
@@ -82,6 +83,19 @@ class GraphAddresser {
 		return this.address_table[this.identifier_table[addr]];
 	}
 
+	isInactive() {
+		let keys = Object.keys(this.address_table),
+			l = keys.length,
+			res = true,
+			entity;
+		// console.log("ADDRESSER", this.address_table);
+		while (l--) {
+			entity = this.address_table[keys[l]];
+			res = res && entity.isInactive();
+		}
+		return res;
+	}
+
 	getAddress(addr) {
 		return this.identifier_table[addr];
 	}
@@ -94,8 +108,22 @@ class GraphAddresser {
 		return this.graph.next(cursor, criteria);
 	}
 
-	entities() {
-		return _.values(this.address_table);
+	entities(fn) {
+		let keys = Object.keys(this.address_table),
+			l = keys.length,
+			res = [],
+			entity;
+		while (l--) {
+			entity = this.address_table[keys[l]];
+			if (fn) {
+				if (fn(entity))
+					res.push(entity);
+			} else {
+				res.push(entity);
+			}
+		}
+		return res;
+
 	}
 
 	updateCallback() {
@@ -146,6 +174,15 @@ class GraphAddresser {
 		return [lbranch, rbranch];
 	}
 
+	splitBranchBy(desc, splitter) {
+		if (!splitter || !(splitter.constructor === Function))
+			return [];
+		let lbranch = {},
+			rbranch = {};
+		this._split(desc, splitter, lbranch, rbranch);
+		return [lbranch, rbranch];
+	}
+
 	_split(curr, splitter, curr_left, curr_right) {
 		if (curr.type === 'idle') {
 			if (splitter(curr.data)) {
@@ -181,6 +218,10 @@ class GraphAddresser {
 			empty = !curr_right.data[curr_right.data.length - 1].type;
 			empty && curr_right.data.pop();
 		}
+	}
+
+	description() {
+		return this.desc;
 	}
 }
 

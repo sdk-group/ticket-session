@@ -20,7 +20,7 @@ class Router extends OrchestrationNode {
 				if (!node.isDone())
 					break;
 			}
-			console.log("ROUTER RENDER", rendered);
+			// console.log("ROUTER RENDER", rendered);
 			return rendered;
 		}
 		return this.getNode(cursor.currentLevelPos())
