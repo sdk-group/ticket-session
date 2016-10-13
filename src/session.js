@@ -56,6 +56,7 @@ class Session {
 				depth: null
 			}));
 		this._modelDoc.set("description", desc);
+		this._modelDoc.set("directed", false);
 		let uses = this._modelDoc.get("uses");
 		uses.push(virtual_entity.id);
 		this._modelDoc.set("uses", uses);
