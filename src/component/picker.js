@@ -28,17 +28,31 @@ class Picker extends OrchestrationNode {
 			.render(cursor.incDepth());
 	}
 
+	isApplyable(fn) {
+		let l = this.getLength(),
+			res = true,
+			node;
+		while (l--) {
+			node = this.getNode(l);
+			res = res && node.isApplyable(fn);
+		}
+		return res;
+	}
+
 	next(cursor, criteria) {
+		// console.log("PICKER");
 		let l = this.getLength(),
 			len = l,
 			node, nxt;
 		while (l--) {
 			node = this.getNode(len - l - 1);
-			if (!node.isDone() && cursor.current() !== node.getContent() && criteria(node.getContent())) {
+			// console.log(!node.isDone(), cursor.current() !== node.getContent(), node.isApplyable(criteria), node);
+			if (!node.isDone() && cursor.current() !== node.getContent() && node.isApplyable(criteria)) {
 				nxt = node;
 				break;
 			}
 		}
+		// console.log("PICKER NXT", cursor.current(), nxt);
 		if (nxt) {
 			//@TODO move some of this logic to idle
 			if (nxt.isLeaf()) {
@@ -47,13 +61,13 @@ class Picker extends OrchestrationNode {
 				return nxt.next(cursor, criteria);
 			}
 		} else {
-			console.log("PICKER PARENT", this._parent);
+			// console.log("PICKER PARENT", this._parent);
 			let parent = this.getParent();
 			if (!parent) {
 				cursor.clear();
 				return null;
 			}
-			return parent.next(cursor, criteria);
+			return parent.next(cursor, criteria, false);
 		}
 	}
 

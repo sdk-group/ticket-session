@@ -96,7 +96,6 @@ class Session {
 				data: branches
 			};
 		}
-		console.log("NEWDESC", desc);
 		this._modelDoc.set("description", desc);
 		this.from(this.extract(), entities);
 	}

@@ -27,21 +27,43 @@ class Router extends OrchestrationNode {
 			.render(cursor.incDepth());
 	}
 
-	next(cursor, criteria) {
+	next(cursor, criteria, downtree = true) {
+		// console.log("ROUTER", downtree);
 		let l = this.getLength(),
 			len = l,
-			node, nxt, met = false;
+			node, nxt;
+		// if (!downtree) {
+		// 	cursor.clear();
+		// 	return null;
+		// }
 		while (l--) {
 			node = this.getNode(len - l - 1);
 			// console.log("NXT", met, cursor.current(), node);
-			if (!node.isDone() && (cursor.isEmpty() || node.contains(cursor.current()) && !node.isLeaf() || met)) {
-				nxt = node;
-				break;
+			if (!cursor.isEmpty()) {
+				if (node.contains(cursor.current())) {
+					if (node.isDone()) {
+						nxt = this.getNode(len - l);
+						break;
+					} else {
+						nxt = node;
+						break;
+					}
+				}
+			} else {
+				if (!node.isDone()) {
+					nxt = node;
+					break;
+				}
 			}
-			met = met || node.contains(cursor.current());
+			// if (!node.isDone() && (cursor.isEmpty() || node.contains(cursor.current()) && !node.isLeaf() || met)) {
+			// 	nxt = node;
+			// 	break;
+			// }
+			// met = met || node.contains(cursor.current());
 		}
-		// console.log("NXT II", nxt);
-		if (nxt) {
+		// console.log("ROUTER CURR", cursor.current());
+		// console.log("ROUTER NXT ", nxt, nxt && nxt.isApplyable(criteria), !nxt.isDone());
+		if (nxt && nxt.isApplyable(criteria) && !nxt.isDone()) {
 			if (nxt.isLeaf()) {
 				cursor.point(nxt.getContent());
 			} else {
@@ -54,7 +76,7 @@ class Router extends OrchestrationNode {
 				cursor.clear();
 				return null;
 			}
-			return parent.next(cursor, criteria);
+			return parent.next(cursor, criteria, false);
 		}
 	}
 

@@ -47,51 +47,13 @@ class TicketSession {
 }
 
 
-describe('session', function () {
+describe.only('session', function () {
 	this.slow(0);
 	this.timeout(3000);
 
-	let session, tickets, desc;
 
-
-	beforeEach(function () {
-		desc = {
-			uses: ['ticket-test--1', 'ticket-test--2', 'ticket-test--3'],
-			description: {
-				type: 'picker',
-				data: [{
-						type: 'idle',
-						data: 'ticket-test--1'
-				}, {
-						type: 'picker',
-						data: [{
-							type: 'idle',
-							data: 'ticket-test--2'
-					}, {
-							type: 'idle',
-							data: 'ticket-test--3'
-					}, {
-							type: 'idle',
-							data: 'ticket-test--4'
-					}]
-				},
-					{
-						type: 'idle',
-						data: 'ticket-test--5'
-					}]
-			}
-		};
-		let t = new TicketSession();
-		t.fillThis(_.cloneDeep(desc));
-		tickets = _.map(Array(20), (t, i) => new Ticket({
-			id: 'ticket-test--' + i,
-			state: 'registered'
-		}));
-
-		session = Session(t, tickets);
-	})
-
-	describe.only('router session', function () {
+	describe('router session', function () {
+		let session, tickets, desc;
 		beforeEach(function () {
 			desc = {
 				uses: ['ticket-test--1', 'ticket-test--2', 'ticket-test--3'],
@@ -121,6 +83,7 @@ describe('session', function () {
 			};
 			let t = new TicketSession();
 			t.fillThis(_.cloneDeep(desc));
+
 			tickets = _.map(Array(20), (t, i) => new Ticket({
 				id: 'ticket-test--' + i,
 				state: 'registered'
@@ -157,57 +120,59 @@ describe('session', function () {
 		});
 
 
-		it('ouch', function () {
-			console.log("____________________________________________________________");
-			let d = {
-				"type": "router",
-				"data": [
-					{
-						"type": "router",
-						"data": [
-							{
-								"type": "picker",
-								"data": [
-									{
-										"type": "idle",
-										"data": "ticket-test--1"
-									}]
-							}, {
-								"type": "picker",
-								"data": [
-									{
-										"type": "idle",
-										"data": "ticket-test--2"
-									}]
-							}]
-					}, {
-						"type": "router",
-						"data": [
-							{
-								"type": "picker",
-								"data": []
-							}, {
-								"type": "picker",
-								"data": []
-							}]
-					}]
-			}
+		// it('ouch', function () {
+		// 	console.log("____________________________________________________________");
+		// 	let d = {
+		// 		"type": "router",
+		// 		"data": [
+		// 			{
+		// 				"type": "router",
+		// 				"data": [
+		// 					{
+		// 						"type": "picker",
+		// 						"data": [
+		// 							{
+		// 								"type": "idle",
+		// 								"data": "ticket-test--1"
+		// 							}]
+		// 					}, {
+		// 						"type": "picker",
+		// 						"data": [
+		// 							{
+		// 								"type": "idle",
+		// 								"data": "ticket-test--2"
+		// 							}]
+		// 					}]
+		// 			}, {
+		// 				"type": "router",
+		// 				"data": [
+		// 					{
+		// 						"type": "picker",
+		// 						"data": []
+		// 					}, {
+		// 						"type": "picker",
+		// 						"data": []
+		// 					}]
+		// 			}]
+		// 	}
 
-			let t = new TicketSession();
-			t.fillThis(_.cloneDeep(d));
-			session = Session(t, tickets);
-			expect(session.constructor.name)
-				.to.equal('Session');
-		});
+		// 	let t = new TicketSession();
+		// 	t.fillThis(_.cloneDeep(d));
+		// 	session = Session(t, tickets);
+		// 	expect(session.constructor.name)
+		// 		.to.equal('Session');
+		// });
 
 		it('should set session cursor by str', function () {
 			session.point('ticket-test--2');
+			tickets[2].state = 'called';
 			expect(session.cursor.current())
 				.to.eql(tickets[2])
 		});
 
 		it('should set session cursor by obj', function () {
 			session.point(tickets[2]);
+			tickets[2].state = 'called';
 			expect(session.cursor.current())
 				.to.eql(tickets[2])
 		});
@@ -215,6 +180,7 @@ describe('session', function () {
 
 		it('should render session', function () {
 			session.point(tickets[2]);
+			tickets[2].state = 'called';
 			let r = session.render();
 			expect(r)
 				.to.eql(tickets[2]);
@@ -248,14 +214,16 @@ describe('session', function () {
 				.to.deep.equal(tickets[2])
 		});
 
-		it('should next session with pointer', function () {
+		it('should next session with pointer !!!!', function () {
 			session.point('ticket-test--1');
-			let r = session.next();
+			tickets[1].state = 'called';
+			let r = session.next(() => true);
 			expect(r)
 				.to.deep.equal(tickets[2])
 		});
 		it('should next session with pointer 0-0', function () {
 			session.point('ticket-test--2');
+			tickets[2].state = 'called';
 			tickets[3].state = 'closed';
 			tickets[4].state = 'closed';
 			tickets[5].state = 'closed';
@@ -263,14 +231,16 @@ describe('session', function () {
 			expect(r)
 				.to.equal(null)
 		});
-		it('should next session with pointer', function () {
+		it('should next session with pointer !!!', function () {
 			session.point('ticket-test--2');
+			tickets[2].state = 'called';
 			let r = session.next();
 			expect(r)
 				.to.deep.equal(tickets[3])
 		});
-		it('should next session with pointer', function () {
+		it('should next session with pointer !!', function () {
 			session.point('ticket-test--1');
+			tickets[1].state = 'called';
 			tickets[2].state = 'closed';
 			let r = session.next();
 			expect(r)
@@ -279,17 +249,54 @@ describe('session', function () {
 
 		it('should next session with pointer !', function () {
 			session.point('ticket-test--1');
+			tickets[1].state = 'called';
 			tickets[2].state = 'closed';
 			tickets[3].state = 'closed';
 			tickets[4].state = 'closed';
 			let r = session.next();
 			expect(r)
-				.to.deep.equal(tickets[5])
+				.to.deep.equal(null)
 		});
 	});
 
 	describe('picker session', function () {
+		let session, tickets, desc;
+		beforeEach(function () {
+			desc = {
+				uses: ['ticket-test--1', 'ticket-test--2', 'ticket-test--3'],
+				description: {
+					type: 'picker',
+					data: [{
+							type: 'idle',
+							data: 'ticket-test--1'
+				}, {
+							type: 'picker',
+							data: [{
+								type: 'idle',
+								data: 'ticket-test--2'
+					}, {
+								type: 'idle',
+								data: 'ticket-test--3'
+					}, {
+								type: 'idle',
+								data: 'ticket-test--4'
+					}]
+				},
+						{
+							type: 'idle',
+							data: 'ticket-test--5'
+					}]
+				}
+			};
+			let t = new TicketSession();
+			t.fillThis(_.cloneDeep(desc));
+			tickets = _.map(Array(20), (t, i) => new Ticket({
+				id: 'ticket-test--' + i,
+				state: 'registered'
+			}));
 
+			session = Session(t, tickets);
+		})
 		it('#constructor', function () {
 			desc = {
 				uses: ['ticket-test--1', 'ticket-test--2', 'ticket-test--3'],
