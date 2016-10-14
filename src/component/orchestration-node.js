@@ -35,9 +35,7 @@ class OrchestrationNode {
 		return this._parent;
 	}
 
-	isApplyable(fn) {
-		return true;
-	}
+
 	notify(data) {
 		console.log(this.constructor.name + " ON NOTIFIED");
 		let l = this._observers.length;

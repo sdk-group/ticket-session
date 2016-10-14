@@ -158,13 +158,7 @@ class Session {
 
 	next(criteria) {
 		criteria = criteria || this._truth;
-		let cnt = this.cursor.current();
-		if (!cnt) {
-			this.graph.next(this.cursor, criteria);
-		} else {
-			cnt = cnt.getContainer();
-			cnt.next(this.cursor, criteria);
-		}
+		this.graph.next(this.cursor, criteria);
 		return this.cursor.current();
 	}
 

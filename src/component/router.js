@@ -27,15 +27,92 @@ class Router extends OrchestrationNode {
 			.render(cursor.incDepth());
 	}
 
-	next(cursor, criteria, downtree = true) {
-		// console.log("ROUTER", downtree);
+	next(cursor, criteria) {
+		// console.log("ROUTER");
 		let l = this.getLength(),
 			len = l,
 			node, nxt;
-		// if (!downtree) {
-		// 	cursor.clear();
-		// 	return null;
-		// }
+		while (l--) {
+			node = this.getNode(len - l - 1);
+			// console.log("NXT", cursor.current(), node, node.contains(cursor.current()));
+			if (!cursor.isEmpty()) {
+				if (node.contains(cursor.current())) {
+					if (node.isDone()) {
+						nxt = this.getNode(len - l);
+						break;
+					} else {
+						nxt = node;
+						break;
+					}
+				}
+			} else {
+				if (!node.isDone()) {
+					nxt = node;
+					break;
+				}
+			}
+		}
+		// console.log("ROUTER CURR", cursor.current());
+		// console.log("ROUTER NXT ", nxt);
+		if (nxt && nxt.canNext(cursor, criteria)) {
+			return nxt.next(cursor, criteria);
+		} else {
+			cursor.clear();
+			return null;
+		}
+	}
+
+	// next(cursor, criteria, prev = false) {
+	// 	console.log("ROUTER", prev);
+	// 	let l = this.getLength(),
+	// 		len = l,
+	// 		node, nxt;
+	// 	if (!prev || prev.contains(cursor.current())) {
+	// 		while (l--) {
+	// 			node = this.getNode(len - l - 1);
+	// 			// console.log("NXT", met, cursor.current(), node);
+	// 			if (!cursor.isEmpty()) {
+	// 				if (node.contains(cursor.current())) {
+	// 					if (node.isDone()) {
+	// 						nxt = this.getNode(len - l);
+	// 						break;
+	// 					} else {
+	// 						nxt = node;
+	// 						break;
+	// 					}
+	// 				}
+	// 			} else {
+	// 				if (!node.isDone()) {
+	// 					nxt = node;
+	// 					break;
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// 	console.log("ROUTER CURR", cursor.current());
+	// 	console.log("ROUTER NXT ", nxt);
+	// 	if (nxt && !nxt.isDone()) {
+	// 		if (nxt.isLeaf()) {
+	// 			cursor.point(nxt.getContent());
+	// 		} else {
+	// 			return nxt.next(cursor, criteria);
+	// 		}
+	// 	} else {
+	// 		// console.log("ROUTER PARENT", this._parent);
+	// 		// let parent = this.getParent();
+	// 		// if (!parent) {
+	// 		cursor.clear();
+	// 		return null;
+	// 		// }
+	// 		// return parent.next(cursor, criteria, this);
+	// 	}
+	// }
+
+
+	canNext(cursor, criteria) {
+		let l = this.getLength(),
+			len = l,
+			node, nxt;
 		while (l--) {
 			node = this.getNode(len - l - 1);
 			// console.log("NXT", met, cursor.current(), node);
@@ -55,31 +132,10 @@ class Router extends OrchestrationNode {
 					break;
 				}
 			}
-			// if (!node.isDone() && (cursor.isEmpty() || node.contains(cursor.current()) && !node.isLeaf() || met)) {
-			// 	nxt = node;
-			// 	break;
-			// }
-			// met = met || node.contains(cursor.current());
 		}
-		// console.log("ROUTER CURR", cursor.current());
-		// console.log("ROUTER NXT ", nxt, nxt && nxt.isApplyable(criteria), !nxt.isDone());
-		if (nxt && nxt.isApplyable(criteria) && !nxt.isDone()) {
-			if (nxt.isLeaf()) {
-				cursor.point(nxt.getContent());
-			} else {
-				return nxt.next(cursor, criteria);
-			}
-		} else {
-			// console.log("ROUTER PARENT", this._parent);
-			let parent = this.getParent();
-			if (!parent) {
-				cursor.clear();
-				return null;
-			}
-			return parent.next(cursor, criteria, false);
-		}
-	}
 
+		return nxt ? nxt.canNext(cursor, criteria) : false;
+	}
 
 	isDone() {
 		let l = this.getLength(),
@@ -93,9 +149,9 @@ class Router extends OrchestrationNode {
 
 	contains(item) {
 		let l = this.getLength(),
-			res = true;
+			res = false;
 		while (l--) {
-			res = res && this.getNode(l)
+			res = res || this.getNode(l)
 				.contains(item);
 		}
 		return res;

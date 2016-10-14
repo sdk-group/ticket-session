@@ -37,9 +37,9 @@ class Idle extends OrchestrationNode {
 		this.notify(this._content);
 	}
 
-	isApplyable(fn) {
-		return fn && fn(this.getContent());
-	}
+	// isApplyable(fn) {
+	// 	return fn && fn(this.getContent());
+	// }
 
 	isDone() {
 		return this._content.isProcessed();
@@ -49,17 +49,22 @@ class Idle extends OrchestrationNode {
 	}
 	next(cursor, criteria) {
 		// console.log("IDLE");
-		let parent = this.getParent();
-		if (parent)
-			return parent.next(cursor, criteria, false);
-		else {
-			let cnt = this.getContent();
-			if (this.isDone() || cursor.current() === cnt) {
-				cursor.clear();
-			} else {
-				cursor.point(cnt);
-			}
+		// let parent = this.getParent();
+		// if (parent)
+		// return parent.next(cursor, criteria, this);
+		// else {
+		let cnt = this.getContent();
+		if (this.isDone() || cursor.current() === cnt) {
+			cursor.clear();
+		} else {
+			cursor.point(cnt);
 		}
+		// }
+	}
+
+	canNext(cursor, criteria) {
+		let cnt = this.getContent();
+		return !(this.isDone() || cursor.current() === cnt) && criteria(cnt);
 	}
 }
 
