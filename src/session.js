@@ -8,9 +8,22 @@ class Session {
 		this.graph = new Graph();
 		this.cursor = new Cursor(this.graph);
 		this.from(desc, linkdata);
+		this.invalidate();
+		this._rendered = [];
 	}
 
 	// methods
+
+	invalidate() {
+		this._valid = false;
+	}
+	validate() {
+		this._valid = true;
+	}
+
+	valid() {
+		return this._valid;
+	}
 
 	from(desc, linkdata) {
 		this.graph.clear();
@@ -124,7 +137,9 @@ class Session {
 
 
 	render() {
-		return this.graph.render(this.cursor);
+		if (!this.valid())
+			this._rendered = this.graph.render(this.cursor);
+		return this._rendered;
 	}
 
 	find(id) {
