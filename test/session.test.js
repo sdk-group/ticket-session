@@ -20,6 +20,10 @@ class Ticket {
 	setContainer(cnt) {
 		this._container = cnt;
 	}
+	isInactive() {
+		let state = this.state;
+		return state == 'closed' || state == 'expired';
+	}
 
 	getContainer() {
 		return this._container;

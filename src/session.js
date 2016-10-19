@@ -25,6 +25,19 @@ class Session {
 		return this._valid;
 	}
 
+	update(id, leaf) {
+		let tick = this.find(id);
+		if (!tick)
+			return;
+		tick.update(leaf);
+		this.invalidate();
+		if (tick.isInactive())
+			this._setInactive(this.graph.isInactive());
+		else
+			this._setInactive(false);
+		console.log("UPDATE", leaf.id, this.graph.isInactive());
+	}
+
 	from(desc, linkdata) {
 		this.graph.clear();
 		this.cursor.clear();
@@ -41,6 +54,8 @@ class Session {
 				addr = uses[l];
 		}
 		this.point(addr);
+		// console.log("BUILDER GRAPH INACTIVE", this.identifier(), this.graph.isInactive());
+		this._setInactive(this.graph.isInactive());
 
 		return this;
 	}
@@ -63,11 +78,10 @@ class Session {
 				data: virtual_entity.id
 			});
 		}
-		console.log("DESCRIPTION", require('util')
-			.inspect(desc, {
-
-				depth: null
-			}));
+		// console.log("DESCRIPTION", require('util')
+		// 	.inspect(desc, {
+		// 		depth: null
+		// 	}));
 		this._modelDoc.set("description", desc);
 		this._modelDoc.set("directed", false);
 		let uses = this._modelDoc.get("uses");
@@ -103,7 +117,7 @@ class Session {
 				.data[0],
 				this.graph.description()
 				.data[1], customizer);
-			console.log("MERGED", buff);
+			// console.log("MERGED", buff);
 			let branches = this.graph.splitBranchBy(buff, splitter);
 			desc = {
 				type: 'router',
@@ -177,8 +191,14 @@ class Session {
 		return this.cursor.current();
 	}
 
+	_setInactive(val) {
+		// console.log("set inactive", this.identifier(), val);
+		this._inactive = !!val;
+	}
+
 	isInactive() {
-		return this.graph.isInactive();
+		// console.log("inactive", this.identifier(), this._inactive);
+		return this._inactive;
 	}
 
 	onUpdate(cb) {
