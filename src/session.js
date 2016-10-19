@@ -35,6 +35,9 @@ class Session {
 			this._setInactive(this.graph.isInactive());
 		else
 			this._setInactive(false);
+		this.cursor.clear();
+		if (tick.isActive())
+			this.cursor.point(tick);
 		console.log("UPDATE", leaf.id, this.graph.isInactive());
 	}
 
