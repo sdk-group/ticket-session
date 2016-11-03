@@ -51,7 +51,7 @@ class TicketSession {
 }
 
 
-describe.only('session', function () {
+describe('session', function () {
 	this.slow(0);
 	this.timeout(3000);
 
