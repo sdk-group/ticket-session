@@ -1,10 +1,94 @@
 'use strict'
 
-describe("PERF", function () {
+describe.only("PERF", function () {
 	this.timeout(100000);
 	this.slow(0);
 	let iterations = 1000000;
 	console.log("ITERATIONS x %d", iterations)
+		// describe('array ops', function () {
+		// 	let x1, x2, x3, km1 = {},
+		// 		km2 = {},
+		// 		km3 = {};
+		// 	beforeEach(function () {
+		// 		x1 = Array(2000);
+		// 		x2 = Array(1000);
+		// 		x3 = Array(1000);
+		// 		x1 = _.map(x1, (el, i) => {
+		// 			let val = Math.random();
+		// 			km1[val] = i;
+		// 			return val
+		// 		})
+		// 		x2 = _.map(x2, (el, i) => {
+		// 			let val = Math.random();
+		// 			km2[val] = i;
+		// 			return val
+		// 		})
+		// 		x3 = _.map(x3, (el, i) => {
+		// 			let val = Math.random();
+		// 			km3[val] = i;
+		// 			return val
+		// 		})
+		// 	});
+		// 	it('solid', function () {
+		// 		for (var i = 0; i < iterations; i++) {
+		// 			let keys = Object.keys(km1),
+		// 				l = keys.length;
+		// 			while (l--) {
+		// 				x1[km1[keys[l]]]++;
+		// 			}
+		// 		}
+		// 	});
+
+	// 	it('solid-1', function () {
+	// 		for (var i = 0; i < iterations; i++) {
+	// 			let l = x1.length;
+	// 			while (l--) {
+	// 				x1[l]++;
+	// 			}
+	// 		}
+	// 	});
+	// 	it('divided', function () {
+	// 		let flag = true,
+	// 			donor, acceptor, val;
+	// 		for (var i = 0; i < iterations; i++) {
+	// 			if (flag) {
+	// 				donor = x2;
+	// 				km2[11]
+	// 				acceptor = x3
+	// 			} else {
+	// 				donor = x3;
+	// 				acceptor = x2;
+	// 			}
+	// 			val = donor[11]
+	// 			donor.splice(11, 1);
+	// 			acceptor.push(val)
+	// 		}
+	// 		flag = !flag;
+
+	// 	});
+
+	// 	it('divided_addr', function () {
+	// 		let flag = true,
+	// 			donor = {
+	// 				11: '42'
+	// 			},
+	// 			acceptor = {};
+	// 		for (var i = 0; i < iterations; i++) {
+	// 			if (flag) {
+	// 				_.unset(donor, "11");
+	// 				// donor["11"] = undefined;
+	// 				acceptor["11"] = '42';
+	// 			} else {
+	// 				// acceptor["11"] = undefined;
+	// 				_.unset(acceptor, "11");
+	// 				donor["11"] = '42';
+	// 			}
+	// 			x1[acceptor["11"] || donor["11"]] += 1;
+	// 		}
+	// 		flag = !flag;
+
+	// 	});
+	// });
 	describe('sort', function () {
 		let x1, x2;
 		beforeEach(function () {
@@ -92,13 +176,15 @@ describe("PERF", function () {
 			console.log(res);
 		});
 	})
-	describe('indexOf', function () {
+	describe.only('indexOf', function () {
 		let x1, x2;
 		beforeEach(function () {
 			x1 = Array(150);
 			x2 = Array(100);
 			x1 = _.map(x1, el => Math.random())
-			x2 = _.map(x2, el => Math.random())
+			x2 = _.map(x2, el => ({
+				val: Math.random()
+			}))
 		});
 
 		it('lodash', function () {
@@ -112,6 +198,26 @@ describe("PERF", function () {
 			let res;
 			for (var i = 0; i < iterations; i++) {
 				res = !!~x1.indexOf(x1[25])
+			}
+		});
+
+		it('find', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = _.find(x2, x2[25])
+			}
+		});
+
+		it('find by keymap', function () {
+			let res, keymap = {},
+				l = x2.length,
+				k = l;
+			while (l--) {
+				keymap[x2[l].val] = l;
+			}
+			for (var i = 0; i < iterations; i++) {
+
+				res = x2[keymap[x2[25].val]]
 			}
 		});
 	})
@@ -551,6 +657,16 @@ describe("PERF", function () {
 				res = Object.keys(x1);
 			}
 		});
+		it('arr', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				let fin = [];
+				for (var ij in x1) {
+					fin.push(ij)
+				}
+			}
+			console.log(ij);
+		});
 	});
 	describe('obj has', function () {
 		let x1;
@@ -662,7 +778,135 @@ describe("PERF", function () {
 
 		});
 
+		it(' reduce ', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				res = {}
+				_.reduce(x1, (acc, val, key) => {
+					acc[key] = val;
+					return acc;
+				}, res)
+			}
+
+		});
+
 	});
+	describe.only('keyby', function () {
+		let x1;
+		beforeEach(function () {
+			x1 = Array(150);
+			x1 = _.map(x1, el => ({
+				val: Math.random()
+			}))
+		});
+
+		it(' reduce ', function () {
+			let res = {};
+			for (var i = 0; i < iterations; i++) {
+				res = {}
+				_.reduce(x1, (acc, val, key) => {
+					acc[val.val] = val;
+					return acc;
+				}, res)
+			}
+
+		});
+
+		it(' lodash ', function () {
+			let res = {};
+			for (var i = 0; i < iterations; i++) {
+				res = _.keyBy(x1, 'val')
+			}
+
+		});
+
+		it(' while ', function () {
+			let res = {},
+				l = x1.length,
+				k = l;
+			for (var i = 0; i < iterations; i++) {
+				res = {}
+				while (l--) {
+					res[x1[l].val] = x1[l];
+				}
+				l = k;
+			}
+
+		});
+
+		it('keymap', function () {
+			let res = {},
+				l = x1.length,
+				k = l;
+			for (var i = 0; i < iterations; i++) {
+				res = {}
+				while (l--) {
+					res[x1[l].val] = l;
+				}
+				l = k;
+			}
+
+		});
+	});
+	describe.only('counters', function () {
+		var j = 0,
+			iter = iterations * 100;
+
+		beforeEach(function () {
+			j = 0
+		});
+		it('++', function () {
+			let res;
+			for (var i = 0; i < iter; i++) {
+				j++
+			}
+		});
+		it('+=', function () {
+			let res;
+			for (var i = 0; i < iter; i++) {
+				j += 1
+			}
+		});
+		it('++ in loop', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				for (j = 0; j < 100; j++) {}
+			}
+		});
+		it('+= in loop', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				for (j = 0; j < 100; j += 1) {}
+			}
+		});
+
+		it('++ in loop local var', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				for (var j = 0; j < 100; j++) {}
+			}
+		});
+		it('+= in loop local var', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				for (var j = 0; j < 100; j += 1) {}
+			}
+		});
+
+		it('++ in loop local let', function () {
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				for (let j = 0; j < 100; j++) {}
+			}
+		});
+		it('+= in loop local let', function () {
+			let res;
+			for (let i = 0; i < iterations; i++) {
+				for (var j = 0; j < 100; j += 1) {}
+			}
+		});
+	})
+
 
 	describe('forEach', function () {
 		let x1, x2;
@@ -719,6 +963,64 @@ describe("PERF", function () {
 			for (var i = 0; i < iterations; i++) {
 				while (l--) {
 					fn(x1[k - l - 1]);
+				}
+				l = k;
+			}
+		});
+
+		it('while 2', function () {
+			var k = x1.length,
+				l = x1.length;
+			let res;
+			for (var i = 0; i < iterations; i++) {
+				while (l--) {
+					fn(x1[k - l - 1]);
+				}
+				l = k;
+			}
+		});
+		it('while with let', function () {
+			let res, k = x1.length,
+				l = x1.length,
+				key;
+			for (var i = 0; i < iterations; i++) {
+				while (l--) {
+					key = x1[k - l - 1];
+					fn(key);
+				}
+				l = k;
+			}
+		});
+		it('while with inner let', function () {
+			let res, k = x1.length,
+				l = x1.length;
+			for (var i = 0; i < iterations; i++) {
+				while (l--) {
+					let key = x1[k - l - 1];
+					fn(key);
+				}
+				l = k;
+			}
+		});
+		it('while with var', function () {
+			let res, k = x1.length,
+				l = x1.length
+			var key;
+			for (var i = 0; i < iterations; i++) {
+				while (l--) {
+					key = x1[k - l - 1];
+					fn(key);
+				}
+				l = k;
+			}
+		});
+		it('while with inner  var', function () {
+			let res, k = x1.length,
+				l = x1.length
+			for (var i = 0; i < iterations; i++) {
+				while (l--) {
+					var key = x1[k - l - 1];
+					fn(key);
 				}
 				l = k;
 			}
