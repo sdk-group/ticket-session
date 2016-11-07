@@ -35,10 +35,11 @@ class Session {
 			this._setInactive(this.graph.isInactive());
 		else
 			this._setInactive(false);
-		this.cursor.clear();
+		if (this.cursor.isSame(tick) && !tick.isActive())
+			this.cursor.clear();
 		if (tick.isActive())
 			this.cursor.point(tick);
-		console.log("UPDATE", leaf.id, this.graph.isInactive());
+		console.log("UPDATE", leaf);
 	}
 
 	from(desc, linkdata) {
@@ -93,6 +94,12 @@ class Session {
 		this.from(this.extract(), entities);
 	}
 
+	_merger(objValue, srcValue) {
+		if (_.isArray(objValue)) {
+			return objValue.concat(srcValue);
+		}
+	}
+
 	splittedRoute(splitter) {
 		let description = this._modelDoc.get("description");
 		if (description.type == 'idle')
@@ -109,17 +116,13 @@ class Session {
 			};
 			this._modelDoc.set("directed", true);
 		} else {
-			function customizer(objValue, srcValue) {
-				if (_.isArray(objValue)) {
-					return objValue.concat(srcValue);
-				}
-			}
+
 			let buff = {};
 			_.mergeWith(buff,
 				this.graph.description()
 				.data[0],
 				this.graph.description()
-				.data[1], customizer);
+				.data[1], this._merger);
 			// console.log("MERGED", buff);
 			let branches = this.graph.splitBranchBy(buff, splitter);
 			desc = {
@@ -154,8 +157,11 @@ class Session {
 
 
 	render() {
-		if (!this.valid())
+		console.log("RENDER SESSION", this.valid());
+		if (!this.valid()) {
 			this._rendered = this.graph.render(this.cursor);
+			this.validate();
+		}
 		return this._rendered;
 	}
 
