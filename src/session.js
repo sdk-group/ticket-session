@@ -65,27 +65,34 @@ class Session {
 	}
 
 	virtualRoute(virtual_entity) {
-		let desc = this._modelDoc.get("description");
+		let all_desc = this._modelDoc.get("description");
+		let desc = all_desc;
 		let entities = this.graph.entities();
+		if (virtual_entity.inherits) {
+			let addr_parts = this.graph.getAddress(virtual_entity.inherits).split(this.graph.addressDelimiter());
+			addr_parts.splice(-1, 1);
+			for (var i = 0; i < addr_parts.length; i++) {
+				desc = (desc.data.constructor == Array) ? desc.data[addr_parts[i]] : desc.data;
+			}
+		}
 		entities.push(virtual_entity);
 		if (desc.type != 'picker') {
-			desc = {
-				type: 'picker',
-				data: [{
-					type: 'idle',
-					data: virtual_entity.id
-				}, _.cloneDeep(desc)]
-			}
+			desc.data = [{
+				type: 'idle',
+				data: virtual_entity.id
+			}, _.cloneDeep(desc)];
+			desc.type = 'picker';
 		} else {
 			desc.data.unshift({
 				type: 'idle',
 				data: virtual_entity.id
 			});
 		}
+		desc = all_desc;
 		// console.log("DESCRIPTION", require('util')
-		// 	.inspect(desc, {
-		// 		depth: null
-		// 	}));
+		//   .inspect(desc, {
+		//     depth: null
+		//  }));
 		this._modelDoc.set("description", desc);
 		this._modelDoc.set("directed", false);
 		let uses = this._modelDoc.get("uses");
